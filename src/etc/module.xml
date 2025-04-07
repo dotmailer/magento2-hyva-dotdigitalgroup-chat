@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Dotdigital - https://dotdigital.com
+ * Copyright © Dotdigital Group PLC 2024-present. All rights reserved.
+ * This code may be used in conjunction with the module dotdigital/dotdigital-magento2-extension
+ * See https://github.com/dotmailer/dotmailer-magento2-extension/blob/master/LICENSE.md
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Hyva_DotdigitalgroupChat">
+        <sequence>
+            <module name="Dotdigitalgroup_Chat"/>
+            <module name="Hyva_CompatModuleFallback"/>
+        </sequence>
+    </module>
+</config>

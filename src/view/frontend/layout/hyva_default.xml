@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+ * Dotdigital - https://dotdigital.com
+ * Copyright © Dotdigital Group PLC 2024-present. All rights reserved.
+ * This code may be used in conjunction with the module dotdigital/dotdigital-magento2-extension
+ * See https://github.com/dotmailer/dotmailer-magento2-extension/blob/master/LICENSE.md
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="dotdigitalgroupchat.index.chat" template="Hyva_DotdigitalgroupChat::index/include.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

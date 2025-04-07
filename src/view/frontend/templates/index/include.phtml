@@ -1,0 +1,73 @@
+<?php
+/**
+ * Dotdigital - https://dotdigital.com
+ * Copyright © Dotdigital Group PLC 2024-present. All rights reserved.
+ * This code may be used in conjunction with the module dotdigital/dotdigital-magento2-extension
+ * See https://github.com/dotmailer/dotmailer-magento2-extension/blob/master/LICENSE.md
+ */
+declare(strict_types=1);
+
+use Dotdigitalgroup\Chat\CustomerData\Chat;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Escaper $escaper
+ * @var ViewModelRegistry $viewModels
+ * @var HyvaCsp $hyvaCsp
+ */
+
+$dotdigitalChatDataViewModel = $viewModels->require(Chat::class);
+$chatData = $dotdigitalChatDataViewModel->getSectionData();
+
+?>
+
+<?php if ($chatData['isEnabled'] == 1): ?>
+    <script>
+        const chatData = <?= /* @noEscape */json_encode($chatData); ?>;
+
+        const {apiSpaceId, isEnabled, apiHost, profileEndpoint, cookieName} = chatData;
+
+        window.addEventListener('message', (event) => {
+            const {type, show} = event.data;
+
+            if (type !== 'SetWidgetState') return;
+
+            if (show === 'hidden') {
+                sessionStorage.removeItem(cookieName);
+            } else if (!sessionStorage.getItem(cookieName)) {
+                window.COMAPI_WIDGET_API.profile.getProfile()
+                    .then(profile => {
+                        fetch(profileEndpoint, {
+                            method: 'POST',
+                            body: "profileId=" + profile.id,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                        })
+                        .then(() => {
+                            sessionStorage.setItem(cookieName, profile.id);
+                            document.cookie = `${cookieName}=${profile.id}`;
+                        })
+                        .catch(console.error);
+                    });
+            }
+        });
+
+        if (apiSpaceId && isEnabled) {
+            window._ddgChatConfig = {apiSpace: apiSpaceId, urlBase: apiHost};
+
+            (function (d, s, id) {
+                let js, cjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = apiHost + '/widget/bootstrap.js';
+                cjs.parentNode.insertBefore(js, cjs);
+            }(document, 'script', 'ddg-chat-widget'));
+        }
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+<?php endif; ?>
