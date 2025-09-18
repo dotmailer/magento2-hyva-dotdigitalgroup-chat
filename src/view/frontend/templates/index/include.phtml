@@ -7,26 +7,25 @@
  */
 declare(strict_types=1);
 
-use Dotdigitalgroup\Chat\CustomerData\Chat;
-use Hyva\Theme\Model\ViewModelRegistry;
-use Hyva\Theme\ViewModel\HyvaCsp;
 use Magento\Framework\Escaper;
+use Dotdigitalgroup\Chat\ViewModel\ChatProfile;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\ViewModel\HyvaCsp;
 
 /**
  * @var Escaper $escaper
- * @var ViewModelRegistry $viewModels
+ * @var Template $block
+ * @var ChatProfile $viewModel
  * @var HyvaCsp $hyvaCsp
  */
 
-$dotdigitalChatDataViewModel = $viewModels->require(Chat::class);
-$chatData = $dotdigitalChatDataViewModel->getSectionData();
-
+$viewModel = $block->getData('view_model');
+$chatData = $viewModel->getChatConfig();
 ?>
 
-<?php if ($chatData['isEnabled'] == 1): ?>
+<?php if ($chatData['isEnabled']): ?>
     <script>
         const chatData = <?= /* @noEscape */json_encode($chatData); ?>;
-
         const {apiSpaceId, isEnabled, apiHost, profileEndpoint, cookieName} = chatData;
 
         window.addEventListener('message', (event) => {
@@ -47,27 +46,14 @@ $chatData = $dotdigitalChatDataViewModel->getSectionData();
                                 'X-Requested-With': 'XMLHttpRequest'
                             },
                         })
-                        .then(() => {
-                            sessionStorage.setItem(cookieName, profile.id);
-                            document.cookie = `${cookieName}=${profile.id}`;
-                        })
-                        .catch(console.error);
+                            .then(() => {
+                                sessionStorage.setItem(cookieName, profile.id);
+                                document.cookie = `${cookieName}=${profile.id}`;
+                            })
+                            .catch(console.error);
                     });
             }
         });
-
-        if (apiSpaceId && isEnabled) {
-            window._ddgChatConfig = {apiSpace: apiSpaceId, urlBase: apiHost};
-
-            (function (d, s, id) {
-                let js, cjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = apiHost + '/widget/bootstrap.js';
-                cjs.parentNode.insertBefore(js, cjs);
-            }(document, 'script', 'ddg-chat-widget'));
-        }
     </script>
     <?php $hyvaCsp->registerInlineScript() ?>
 <?php endif; ?>
