@@ -5,10 +5,26 @@ namespace Hyva\DotdigitalgroupChat\Plugin;
 use Magento\Csp\Model\Collector\DynamicCollector;
 use Magento\Csp\Model\Policy\FetchPolicy;
 
+/**
+ * Plugin to add CSP hash for Dotdigital chat bridge inline event handlers.
+ *
+ */
 class DynamicCollectorPlugin
 {
+    /**
+     * Flag to prevent duplicate hash additions during the collection process.
+     *
+     * @var bool
+     */
     private $hashAdded = false;
 
+    /**
+     * Enables eventHandlersAllowed in Hyva CSP.
+     *
+     *
+     * @param DynamicCollector $subject The dynamic CSP collector instance
+     * @return void
+     */
     public function beforeCollect(DynamicCollector $subject): void
     {
         if (!$this->hashAdded) {
@@ -24,7 +40,7 @@ class DynamicCollectorPlugin
                     [], /* nonceValues */
                     ['GLf/9ce9Q08ND4Lg4RXkqXAacenJaH/xkogiHZfpQY4=' => 'sha256'], /* hashValues */
                     false, /* dynamicAllowed */
-                    true /* eventHandlersAllowed - this enables 'unsafe-hashes' */
+                    true /* eventHandlersAllowed */
                 )
             );
             $this->hashAdded = true;
