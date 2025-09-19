@@ -38,7 +38,7 @@ class DynamicCollectorPlugin
                     false, /* inlineAllowed */
                     false, /* evalAllowed*/
                     [], /* nonceValues */
-                    ['GLf/9ce9Q08ND4Lg4RXkqXAacenJaH/xkogiHZfpQY4=' => 'sha256'], /* hashValues */
+                    [], /* hashValues */
                     false, /* dynamicAllowed */
                     true /* eventHandlersAllowed */
                 )
