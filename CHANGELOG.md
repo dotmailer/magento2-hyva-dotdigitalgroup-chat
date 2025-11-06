@@ -1,3 +1,8 @@
+# 2.0.0
+
+### What's new
+- The module now uses a view model and template from the core Chat module instead of its own template.
+
 # 1.3.0
 
 ## What's new
